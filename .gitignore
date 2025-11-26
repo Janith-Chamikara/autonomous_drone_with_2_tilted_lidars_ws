@@ -1,0 +1,57 @@
+# ============================
+# ROS 2 / Colcon Workspace
+# ============================
+
+# Build artifacts
+/build/
+/install/
+/log/
+
+# colcon metadata
+.colcon/
+colcon.meta
+
+# ROS 2 package logs
+**/CTestTestfile.cmake
+**/Testing/
+**/CTestTemp/
+
+# Python build artifacts
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.pytest_cache/
+
+# CMake build artifacts
+**/CMakeFiles/
+**/CMakeCache.txt
+**/*.cmake
+**/cmake_install.cmake
+**/Makefile
+
+# Ament package index generated during build
+ament_cmake_environment_hooks/
+ament_index/
+
+# Launch/log/debug files
+*.log
+*.bag
+*.db3
+*.mcap
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# CLion / JetBrains
+.idea/
+
+# Linux / macOS trash
+.DS_Store
+Thumbs.db
+
+# Temp files
+*.swp
+*.swo
+*~
