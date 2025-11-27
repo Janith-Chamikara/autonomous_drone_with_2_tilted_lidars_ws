@@ -9,15 +9,12 @@ import onnxruntime as ort
 import os
 from ament_index_python.packages import get_package_share_directory
 
-# --- CONFIGURATION ---
-# Note: These match the namespaces in your launch file
 TOP_LIDAR_TOPIC = '/lidar_top/scan'
 BOT_LIDAR_TOPIC = '/lidar_bottom/scan'
 IMU_TOPIC = '/mavros/imu/data'
 CMD_TOPIC = '/mavros/setpoint_velocity/cmd_vel'
 
-# CNN Constants
-LIDAR_FOV_V = 45.0 * (np.pi / 180.0)  # 45 degrees tilt
+LIDAR_FOV_V = 45.0 * (np.pi / 180.0)
 IMG_H, IMG_W = 60, 80
 MAX_Y = 4.0
 MAX_Z = 3.0
@@ -28,7 +25,7 @@ class CNNNavigator(Node):
     def __init__(self):
         super().__init__('cnn_navigator')
 
-        # 1. Load ONNX Model
+        # Load ONNX Model
         pkg_share = get_package_share_directory('tunnel_pilot')
         model_path = os.path.join(pkg_share, 'models', 'tunnel_cnn.onnx')
 
@@ -42,24 +39,22 @@ class CNNNavigator(Node):
             self.get_logger().error(f'Model Load Failed: {e}')
             return
 
-        # 2. Data Holders (Buffers)
         self.scan_top = None
         self.scan_bot = None
         self.current_roll = 0.0
         self.current_pitch = 0.0
 
-        # 3. Subscribers
-        # Use qos_profile_sensor_data for "Best Effort" (Low Latency)
+        # Subscribers
         self.create_subscription(
             LaserScan, TOP_LIDAR_TOPIC, self.top_cb, qos_profile_sensor_data)
         self.create_subscription(
             LaserScan, BOT_LIDAR_TOPIC, self.bot_cb, qos_profile_sensor_data)
         self.create_subscription(Imu, IMU_TOPIC, self.imu_cb, 10)
 
-        # 4. Publisher
+        # Publisher
         self.cmd_pub = self.create_publisher(Twist, CMD_TOPIC, 10)
 
-        # 5. Control Timer (Runs the Brain at 20Hz)
+        # Control Timer( freq 20 Hz lidar freq is 10 Hz )
         self.create_timer(0.05, self.control_loop)
 
     def top_cb(self, msg):
@@ -71,6 +66,7 @@ class CNNNavigator(Node):
     def imu_cb(self, msg):
         q = msg.orientation
         # Quaternion -> Euler (Roll/Pitch)
+        # Roll - Phi | Pitch - Theta | Yaw - Psi
         sinr_cosp = 2 * (q.w * q.x + q.y * q.z)
         cosr_cosp = 1 - 2 * (q.x * q.x + q.y * q.y)
         self.current_roll = np.arctan2(sinr_cosp, cosr_cosp)
