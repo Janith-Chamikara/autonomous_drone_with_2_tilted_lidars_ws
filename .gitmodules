@@ -1,0 +1,6 @@
+[submodule "src/ydlidar_ros2_driver"]
+	path = src/ydlidar_ros2_driver
+	url = git@github.com:Janith-Chamikara/ydlidar_ros2_driver.git
+[submodule "src/tunnel_pilot"]
+	path = src/tunnel_pilot
+	url = git@github.com:Janith-Chamikara/tunnel_pilot.git
