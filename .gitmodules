@@ -5,5 +5,5 @@
 	path = src/tunnel_pilot
 	url = https://github.com/Janith-Chamikara/tunnel_pilot.git
 [submodule "src/gz_simulation"]
-	path = src/tunnel_pilot
+	path = src/gz_simulation
 	url = https://github.com/Janith-Chamikara/gz_simulation
